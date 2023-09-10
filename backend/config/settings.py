@@ -58,6 +58,8 @@ INSTALLED_APPS = [
     'google_login_server_flow',
 ]
 
+AUTH_USER_MODEL = 'user_profile.User'
+
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',

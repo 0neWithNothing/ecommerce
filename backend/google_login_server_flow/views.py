@@ -2,14 +2,14 @@ from rest_framework.views import APIView
 from django.shortcuts import redirect
 from rest_framework import serializers, status
 from rest_framework.response import Response
-from django.contrib.auth import login
 from rest_framework import status
-from django.contrib.auth.models import User
+from django.contrib.auth import get_user_model
 from .service import (
     GoogleRawLoginFlowService,
     get_tokens_for_user,
 )
-         
+
+User = get_user_model()
 
 class PublicApi(APIView):
     authentication_classes = ()
