@@ -12,7 +12,9 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 
 from pathlib import Path
 from dotenv import load_dotenv
+from datetime import timedelta
 import os
+
 
 load_dotenv()
 
@@ -32,7 +34,7 @@ DEBUG = os.environ.get('DEBUG')
 
 ALLOWED_HOSTS = list(os.environ.get('ALLOWED_HOSTS'))
 
-
+BASE_BACKEND_URL = 'http://127.0.0.1:8000'
 # Application definition
 
 INSTALLED_APPS = [
@@ -42,18 +44,24 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+
     # external packages
     'rest_framework',
+    'rest_framework_simplejwt.token_blacklist',
+    'corsheaders',
     'drf_spectacular',
+
 
     # internal app
     'product',
-    'account',
+    'user_profile',
+    'google_login_server_flow',
 ]
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    "corsheaders.middleware.CorsMiddleware",
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -138,6 +146,9 @@ MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+    ],
     'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
 }
 
@@ -147,3 +158,16 @@ SPECTACULAR_SETTINGS = {
     'VERSION': '1.0.0',
     'SERVE_INCLUDE_SCHEMA': False,
 }
+
+CORS_ALLOW_ALL_ORIGINS = True 
+
+SIMPLE_JWT = {
+    "ACCESS_TOKEN_LIFETIME": timedelta(minutes=5),
+    "REFRESH_TOKEN_LIFETIME": timedelta(days=90),
+    "ROTATE_REFRESH_TOKENS": True,
+    "BLACKLIST_AFTER_ROTATION": True,
+    "UPDATE_LAST_LOGIN": False,
+}
+
+GOOGLE_OAUTH2_CLIENT_ID = os.environ.get("DJANGO_GOOGLE_OAUTH2_CLIENT_ID")
+GOOGLE_OAUTH2_CLIENT_SECRET = os.environ.get("DJANGO_GOOGLE_OAUTH2_CLIENT_SECRET")
