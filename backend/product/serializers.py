@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from .models import Product, Size, Category
+from .models import Product, Size, Category, OrderItem, Cart
 
     
 class SizeSerializer(serializers.ModelSerializer):
@@ -28,3 +28,18 @@ class PostProductSerializer(serializers.ModelSerializer):
     class Meta:
         model = Product
         fields = "__all__"
+
+
+class OrderItemSerializer(serializers.ModelSerializer):
+    total_price = serializers.DecimalField(max_digits=20, decimal_places=2, read_only=True)
+    class Meta:
+        model = OrderItem
+        fields = ['id', 'product', 'size', 'count', 'total_price', 'cart']
+
+
+class CartSerializer(serializers.ModelSerializer):
+    items = OrderItemSerializer(many=True)
+    total_price = serializers.DecimalField(max_digits=20, decimal_places=2, read_only=True)
+    class Meta:
+        model = Cart
+        fields = ['user', 'items', 'total_price']

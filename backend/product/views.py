@@ -1,10 +1,12 @@
-from django.shortcuts import get_object_or_404
-from django.utils.text import slugify
 from rest_framework import viewsets
+from rest_framework import generics
 from rest_framework.permissions import IsAdminUser
 
-from .serializers import GetProductSerializer, PostProductSerializer, SizeSerializer, CategorySerializer
-from .models import Product, Size, Category
+from .serializers import (
+    GetProductSerializer, PostProductSerializer, SizeSerializer,
+    CategorySerializer, OrderItemSerializer, CartSerializer
+)
+from .models import Product, Size, Category, OrderItem, Cart
 
 
 class ProductViewSet(viewsets.ModelViewSet):
@@ -32,3 +34,18 @@ class CategoryViewSet(viewsets.ModelViewSet):
     serializer_class = CategorySerializer
     permission_classes = [IsAdminUser]
 
+
+class OrderItemViewSet(viewsets.ModelViewSet):
+    queryset = OrderItem.objects.all()
+    serializer_class = OrderItemSerializer
+    permission_classes = []
+
+
+class CartRetrieveAPIView(generics.RetrieveAPIView):
+    permission_classes = []
+    serializer_class = CartSerializer
+    queryset = Cart.objects.all()
+
+    def update(self, request, *args, **kwargs):
+        kwargs['partial'] = True
+        return super().update(request, *args, **kwargs)
