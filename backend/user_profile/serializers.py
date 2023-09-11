@@ -3,6 +3,7 @@ from django.contrib.auth.password_validation import validate_password
 from rest_framework.validators import UniqueValidator
 from django.contrib.auth import get_user_model
 
+from .models import Profile, Address
 
 User = get_user_model()
 
@@ -29,3 +30,24 @@ class UserSerializer(serializers.ModelSerializer):
         user.set_password(validated_data['password'])
         user.save()
         return user
+
+
+
+class ProfileSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Profile
+        fields = '__all__'
+
+
+class AddressSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Address
+        fields = '__all__'
+
+
+class UserRetrieveSerializer(serializers.ModelSerializer):
+    profile = ProfileSerializer()
+    address = AddressSerializer()
+    class Meta:
+        model = User
+        fields = ['id', 'email', 'profile', 'address']

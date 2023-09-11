@@ -80,11 +80,8 @@ class GoogleLoginApi(PublicApi):
 
         user_email = id_token_decoded["email"]
 
-        user, created = User.objects.get_or_create(email=user_email)
+        user, _ = User.objects.get_or_create(email=user_email)
 
-        if created:
-            user.username = id_token_decoded["name"]
-            user.save()
 
         jwt_token = get_tokens_for_user(user)
 

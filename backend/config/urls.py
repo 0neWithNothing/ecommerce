@@ -7,10 +7,12 @@ from drf_spectacular.views import SpectacularAPIView, SpectacularRedocView, Spec
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+
+    # busines logic
     path('', include('product.urls')),
     
-    # auth
-    path('auth/', include('user_profile.urls')),
+    # auth and user data
+    path('', include('user_profile.urls')),
     path('auth/', include('google_login_server_flow.urls')),
 
     # schema 
