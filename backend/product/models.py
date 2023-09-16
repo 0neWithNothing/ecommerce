@@ -22,7 +22,7 @@ class Category(models.Model):
     
 
 class Product(models.Model):
-    title = models.CharField(max_length=200)
+    title = models.CharField(max_length=100)
     description = models.TextField(blank=True, null=True)
     price = models.DecimalField(max_digits=20, decimal_places=2)
     size = models.ManyToManyField(Size, blank=True, related_name='products')
