@@ -43,3 +43,9 @@ class CartSerializer(serializers.ModelSerializer):
     class Meta:
         model = Cart
         fields = ['user', 'items', 'total_price']
+
+
+class CheckoutSessionSerializer(serializers.Serializer):
+    cart_id = serializers.IntegerField()
+    class Meta:
+        fields = ["cart_id"]

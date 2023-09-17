@@ -1,6 +1,8 @@
+from decimal import Decimal
 from django.db import models
 from django.contrib.auth import get_user_model
 from django.db.models.signals import post_save
+from django.core.validators import MinValueValidator, MaxValueValidator
 
 User = get_user_model()
 
@@ -24,7 +26,9 @@ class Category(models.Model):
 class Product(models.Model):
     title = models.CharField(max_length=100)
     description = models.TextField(blank=True, null=True)
-    price = models.DecimalField(max_digits=20, decimal_places=2)
+    price = models.DecimalField(max_digits=20, decimal_places=2, validators=[
+        MinValueValidator(Decimal('0.01')), MaxValueValidator(Decimal('100000.00'))
+    ])
     size = models.ManyToManyField(Size, blank=True, related_name='products')
     category = models.ForeignKey(Category, related_name='products', null=True, on_delete=models.SET_NULL)
 
