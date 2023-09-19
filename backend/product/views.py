@@ -1,14 +1,15 @@
+import stripe
 from django.shortcuts import redirect
 from rest_framework import viewsets
 from rest_framework import generics
 from rest_framework.permissions import IsAdminUser, IsAuthenticated
-import stripe
-from decimal import Decimal
 from django.conf import settings
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework import status
 from drf_spectacular.utils import extend_schema
+from django.utils.decorators import method_decorator
+from django.views.decorators.cache import cache_page
 
 from .serializers import (
     GetProductSerializer, PostProductSerializer, SizeSerializer,
@@ -16,11 +17,13 @@ from .serializers import (
     CheckoutSessionSerializer
 )
 from .models import Product, Size, Category, OrderItem, Cart
+from .permissions import IsAdminUserOrReadOnly
 
 
+@method_decorator(cache_page(60*60, key_prefix="product-view"), name='dispatch')
 class ProductViewSet(viewsets.ModelViewSet):
     queryset = Product.objects.all()
-    permission_classes = [IsAdminUser]
+    permission_classes = [IsAdminUserOrReadOnly]
 
     def get_serializer_class(self):
         if self.action in ('create', 'update', 'partial_update'):
