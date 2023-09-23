@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from .models import Product, Size, Category, OrderItem, Cart
+from .models import Product, Size, Category, OrderItem, Cart, Image
 
     
 class SizeSerializer(serializers.ModelSerializer):
@@ -17,17 +17,30 @@ class CategorySerializer(serializers.ModelSerializer):
         fields = ('name',)
     
 
+class ImageSerializer(serializers.ModelSerializer):
+    product = serializers.PrimaryKeyRelatedField(read_only=True)
+    class Meta:
+        model = Image
+        fields = '__all__'
+
+class NestedImageSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Image
+        fields = ['image', 'default']
+
 class GetProductSerializer(serializers.ModelSerializer):
     size = serializers.StringRelatedField(many=True)
     category = serializers.StringRelatedField()
+    images = NestedImageSerializer(many=True)
     class Meta:
         model = Product
-        fields = "__all__"
+        fields = '__all__'
+
 
 class PostProductSerializer(serializers.ModelSerializer):
     class Meta:
         model = Product
-        fields = "__all__"
+        fields = '__all__'
 
 
 class OrderItemSerializer(serializers.ModelSerializer):
@@ -48,4 +61,4 @@ class CartSerializer(serializers.ModelSerializer):
 class CheckoutSessionSerializer(serializers.Serializer):
     cart_id = serializers.IntegerField()
     class Meta:
-        fields = ["cart_id"]
+        fields = ['cart_id']

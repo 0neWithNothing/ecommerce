@@ -1,5 +1,5 @@
 import stripe
-from django.shortcuts import redirect
+from django.shortcuts import get_object_or_404, redirect
 from rest_framework import viewsets
 from rest_framework import generics
 from rest_framework.permissions import IsAdminUser, IsAuthenticated
@@ -14,15 +14,15 @@ from django.views.decorators.cache import cache_page
 from .serializers import (
     GetProductSerializer, PostProductSerializer, SizeSerializer,
     CategorySerializer, OrderItemSerializer, CartSerializer,
-    CheckoutSessionSerializer
+    CheckoutSessionSerializer, ImageSerializer
 )
-from .models import Product, Size, Category, OrderItem, Cart
+from .models import Product, Size, Category, OrderItem, Cart, Image
 from .permissions import IsAdminUserOrReadOnly
 
 
-@method_decorator(cache_page(60*60, key_prefix="product-view"), name='dispatch')
+# @method_decorator(cache_page(60*60, key_prefix="product-view"), name='dispatch')
 class ProductViewSet(viewsets.ModelViewSet):
-    queryset = Product.objects.all()
+    queryset = Product.objects.all().prefetch_related("images")
     permission_classes = [IsAdminUserOrReadOnly]
 
     def get_serializer_class(self):
@@ -33,6 +33,34 @@ class ProductViewSet(viewsets.ModelViewSet):
     def update(self, request, *args, **kwargs):
         kwargs['partial'] = True
         return super().update(request, *args, **kwargs)
+
+
+class ImageListCreateAPIView(generics.ListCreateAPIView):
+    queryset = Image.objects.all()
+    serializer_class = ImageSerializer
+    def get_queryset(self):
+        queryset = super(ImageListCreateAPIView, self).get_queryset()
+        return queryset.filter(product__id=self.kwargs.get('pk'))
+
+
+    def perform_create(self, serializer):
+        product = Product.objects.get(pk=self.kwargs.get("pk"))
+        serializer.save(
+            product=product
+        )
+
+
+class ImageRetrieveDestroyAPIView(generics.RetrieveDestroyAPIView):
+    queryset = Image.objects.all()
+    serializer_class = ImageSerializer
+    lookup_field = "pk_img"
+    def get_queryset(self):
+        queryset = super(ImageRetrieveDestroyAPIView, self).get_queryset()
+        return queryset.filter(product__id=self.kwargs.get('pk'))
+    
+    def get_object(self):
+        image = get_object_or_404(self.get_queryset(), pk=self.kwargs.get(self.lookup_field))
+        return image
 
 
 class SizeViewSet(viewsets.ModelViewSet):
@@ -56,7 +84,11 @@ class OrderItemViewSet(viewsets.ModelViewSet):
 class CartRetrieveAPIView(generics.RetrieveAPIView):
     permission_classes = []
     serializer_class = CartSerializer
-    queryset = Cart.objects.all()
+    
+    def get_object(self):
+        cart = get_object_or_404(Cart, user=self.request.user.id)
+        return cart
+    
 
     def update(self, request, *args, **kwargs):
         kwargs['partial'] = True

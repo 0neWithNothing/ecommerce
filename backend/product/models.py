@@ -42,7 +42,6 @@ class Product(models.Model):
 class Image(models.Model):
     image = models.ImageField(upload_to ='uploads/')
     product = models.ForeignKey(Product, related_name='images', on_delete=models.CASCADE)
-    default = models.BooleanField(default=False)
 
 
 class Cart(models.Model):

@@ -10,7 +10,9 @@ router.register(r'order-items', views.OrderItemViewSet)
 
 urlpatterns = [
     path('', include(router.urls)),
-    path('cart/<int:pk>/', views.CartRetrieveAPIView.as_view(), name='cart_data'),
+    path('products/<int:pk>/images/', views.ImageListCreateAPIView.as_view(), name='product_images'),
+    path('products/<int:pk>/images/<int:pk_img>/', views.ImageRetrieveDestroyAPIView.as_view(), name='image_detail'),
+    path('cart/', views.CartRetrieveAPIView.as_view(), name='cart_data'),
     path('create-checkout-session/' , views.CreateCheckoutSessionAPIView.as_view()),
     # path('webhook-test/' , views.WebHook.as_view()),
 ]
