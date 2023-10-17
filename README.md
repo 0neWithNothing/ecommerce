@@ -15,7 +15,7 @@ This is a API for merch eCommerce Shop
 
 1. Copy repository
 2. Create `.env` file and put this variables </br>
-<code>
+~~~
 DEBUG=1
 SECRET_KEY='yoursecret'
 ALLOWED_HOSTS=localhost 127.0.0.1
@@ -36,7 +36,7 @@ SQL_PASSWORD=postgres
 SQL_HOST=db
 SQL_PORT=5432
 DATABASE=postgres
-</code>
+~~~
 
 3. Run `docker compose up -d --build`
 4. Go to [localhost:8000/api/schema/swagger-ui/](http://127.0.0.1:8000/api/schema/swagger-ui/)
