@@ -54,6 +54,7 @@ class ImageRetrieveDestroyAPIView(generics.RetrieveDestroyAPIView):
     queryset = Image.objects.all()
     serializer_class = ImageSerializer
     lookup_field = "pk_img"
+    
     def get_queryset(self):
         queryset = super(ImageRetrieveDestroyAPIView, self).get_queryset()
         return queryset.filter(product__id=self.kwargs.get('pk'))

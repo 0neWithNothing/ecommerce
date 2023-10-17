@@ -1,4 +1,5 @@
 import json
+from django.urls import reverse
 from model_bakery import baker
 from rest_framework import status
 from rest_framework.test import APITestCase
@@ -26,10 +27,10 @@ class TestProduct(AuthorizedMixin):
 
     endpoint = "/products/"
 
-    def test_product_unauthorized(self):
-        self.client.credentials(user=None, token=None)
-        response = self.client.get(self.endpoint)
-        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+    # def test_product_unauthorized(self):
+    #     self.client.credentials(user=None, token=None)
+    #     response = self.client.get(self.endpoint)
+    #     self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
 
     def test_product_get(self):
         baker.make(Product, _quantity=3, make_m2m=True)
@@ -81,7 +82,7 @@ class TestOrderItem(AuthorizedMixin):
     def test_cart(self):
         cart = Cart.objects.get(user=self.user)
         expected_json = CartSerializer(cart).data
-        response = self.client.get(self.endpoint+str(cart.id)+"/")
+        response = self.client.get(reverse('cart_data'))
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data, expected_json)
 

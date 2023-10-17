@@ -4,3 +4,4 @@ class ApplicationError(Exception):
 
         self.message = message
         self.extra = extra or {}
+        

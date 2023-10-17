@@ -169,7 +169,7 @@ SESSION_CACHE_ALIAS = "default"
 
 SPECTACULAR_SETTINGS = {
     'TITLE': 'eCommerce Shop API',
-    'DESCRIPTION': 'Your project description',
+    'DESCRIPTION': 'This is a API for merch eCommerce Shop',
     'VERSION': '1.0.0',
     'SERVE_INCLUDE_SCHEMA': False,
 }

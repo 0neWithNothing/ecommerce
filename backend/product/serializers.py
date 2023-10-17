@@ -26,7 +26,7 @@ class ImageSerializer(serializers.ModelSerializer):
 class NestedImageSerializer(serializers.ModelSerializer):
     class Meta:
         model = Image
-        fields = ['image', 'default']
+        fields = ['image']
 
 class GetProductSerializer(serializers.ModelSerializer):
     size = serializers.StringRelatedField(many=True)
