@@ -1,8 +1,7 @@
 import stripe
 from django.shortcuts import get_object_or_404, redirect
-from rest_framework import viewsets
-from rest_framework import generics
-from rest_framework.permissions import IsAdminUser, IsAuthenticated
+from rest_framework import viewsets, generics, mixins
+from rest_framework.permissions import IsAdminUser, IsAuthenticated, IsAuthenticatedOrReadOnly
 from django.conf import settings
 from rest_framework.response import Response
 from rest_framework.views import APIView
@@ -17,7 +16,7 @@ from .serializers import (
     CheckoutSessionSerializer, ImageSerializer
 )
 from .models import Product, Size, Category, OrderItem, Cart, Image
-from .permissions import IsAdminUserOrReadOnly
+from .permissions import IsAdminUserOrReadOnly, IsCartOwnerOrReadOnly
 
 
 # @method_decorator(cache_page(60*60, key_prefix="product-view"), name='dispatch')
@@ -76,10 +75,20 @@ class CategoryViewSet(viewsets.ModelViewSet):
     permission_classes = [IsAdminUser]
 
 
-class OrderItemViewSet(viewsets.ModelViewSet):
+class OrderItemViewSet(mixins.CreateModelMixin,
+                       mixins.RetrieveModelMixin,
+                       mixins.UpdateModelMixin,
+                       mixins.DestroyModelMixin,
+                       viewsets.GenericViewSet):
+    
     queryset = OrderItem.objects.all()
     serializer_class = OrderItemSerializer
-    permission_classes = []
+    permission_classes = [IsCartOwnerOrReadOnly]
+
+    def perform_create(self, serializer):
+        serializer.save(
+            cart=self.request.user.cart
+        )
 
 
 class CartRetrieveAPIView(generics.RetrieveAPIView):

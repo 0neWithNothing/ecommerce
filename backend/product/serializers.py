@@ -47,7 +47,7 @@ class OrderItemSerializer(serializers.ModelSerializer):
     total_price = serializers.DecimalField(max_digits=20, decimal_places=2, read_only=True)
     class Meta:
         model = OrderItem
-        fields = ['id', 'product', 'size', 'count', 'total_price', 'cart']
+        fields = ['id', 'product', 'size', 'count', 'total_price']
 
 
 class CartSerializer(serializers.ModelSerializer):
