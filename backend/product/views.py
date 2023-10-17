@@ -19,7 +19,7 @@ from .models import Product, Size, Category, OrderItem, Cart, Image
 from .permissions import IsAdminUserOrReadOnly, IsCartOwnerOrReadOnly
 
 
-# @method_decorator(cache_page(60*60, key_prefix="product-view"), name='dispatch')
+@method_decorator(cache_page(60*60, key_prefix="product-view"), name='dispatch')
 class ProductViewSet(viewsets.ModelViewSet):
     queryset = Product.objects.all().prefetch_related("images")
     permission_classes = [IsAdminUserOrReadOnly]
@@ -35,6 +35,7 @@ class ProductViewSet(viewsets.ModelViewSet):
 
 
 class ImageListCreateAPIView(generics.ListCreateAPIView):
+    permission_classes = [IsAdminUserOrReadOnly]
     queryset = Image.objects.all()
     serializer_class = ImageSerializer
     def get_queryset(self):
@@ -50,6 +51,7 @@ class ImageListCreateAPIView(generics.ListCreateAPIView):
 
 
 class ImageRetrieveDestroyAPIView(generics.RetrieveDestroyAPIView):
+    permission_classes = [IsAdminUser]
     queryset = Image.objects.all()
     serializer_class = ImageSerializer
     lookup_field = "pk_img"
@@ -72,7 +74,7 @@ class SizeViewSet(viewsets.ModelViewSet):
 class CategoryViewSet(viewsets.ModelViewSet):
     queryset = Category.objects.all()
     serializer_class = CategorySerializer
-    permission_classes = [IsAdminUser]
+    permission_classes = [IsAdminUserOrReadOnly]
 
 
 class OrderItemViewSet(mixins.CreateModelMixin,
@@ -92,7 +94,7 @@ class OrderItemViewSet(mixins.CreateModelMixin,
 
 
 class CartRetrieveAPIView(generics.RetrieveAPIView):
-    permission_classes = []
+    permission_classes = [IsAuthenticated]
     serializer_class = CartSerializer
     
     def get_object(self):

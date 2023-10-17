@@ -10,7 +10,7 @@ from django.core.validators import MinValueValidator, MaxValueValidator
 User = get_user_model()
 
 class Size(models.Model):
-    name = models.CharField(max_length=5)
+    name = models.CharField(max_length=3)
 
     def __str__(self) -> str:
         return self.name
