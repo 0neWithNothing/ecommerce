@@ -29,10 +29,6 @@ class ProductViewSet(viewsets.ModelViewSet):
             return PostProductSerializer
         return GetProductSerializer
 
-    def update(self, request, *args, **kwargs):
-        kwargs['partial'] = True
-        return super().update(request, *args, **kwargs)
-
 
 class ImageListCreateAPIView(generics.ListCreateAPIView):
     permission_classes = [IsAdminUserOrReadOnly]
