@@ -20,11 +20,11 @@ DEBUG=1
 SECRET_KEY='yoursecret'
 ALLOWED_HOSTS=localhost 127.0.0.1
 
-#### You can leave it as it is and just don't use endpoint with OAuth
-DJANGO_GOOGLE_OAUTH2_CLIENT_ID='your data, but '
+You can leave OAUTH2 variables as it is and just don't use endpoint with OAuth or make your own client and grab the data
+DJANGO_GOOGLE_OAUTH2_CLIENT_ID='your data'
 DJANGO_GOOGLE_OAUTH2_CLIENT_SECRET='your data'
 
-#### You can leave it as it is and just don't use endpoint with checkout (its only simulation of payment)
+You can leave STRIPE variables as it is and just don't use endpoint with checkout (its only simulation of payment) or grab your own Stipe data
 STRIPE_PUBLIC_KEY="your data"
 STRIPE_SECRET_KEY="your data"
 STRIPE_WEBHOOK_SECRET='your data'
